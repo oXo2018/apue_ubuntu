@@ -32,6 +32,7 @@ int main (int argc, char *argv[])
             printf("lstat error");
             continue;
         }
+
         if (S_ISREG(buf.st_mode)) ptr = "regular";
         else if (S_ISDIR(buf.st_mode)) ptr = "directory";
         else if (S_ISCHR(buf.st_mode)) ptr = "character special";
