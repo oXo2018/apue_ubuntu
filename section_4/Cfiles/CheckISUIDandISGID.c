@@ -15,10 +15,11 @@ int main(int argc, char* argv[])
     }
 
     // check S_ISUID bit
-    if (file_stat.st_mode & S_ISUID)
+    if (file_stat.st_mode & S_ISUID) 
     {
         printf("S_ISUID bit is set.\n");
     }else{
+        /* Set user ID on execution.  */
         file_stat.st_mode |= S_ISUID;
     }
 
@@ -27,6 +28,7 @@ int main(int argc, char* argv[])
     {
         printf("S_ISGID bit is set.\n");
     }else{
+        /* Set group ID on execution.  */
         file_stat.st_mode |= S_ISGID;
     }
     
@@ -48,6 +50,7 @@ int main(int argc, char* argv[])
 
     chmod 7777 filename -> the last 7 mean set both ISUID and ISGID
 */
+
 /*
 firmon@ubt:~/Dev/apue/apue_ubuntu/section_4/out$ ./CheckISUIDandISGID ./FileType 
 firmon@ubt:~/Dev/apue/apue_ubuntu/section_4/out$ ./CheckISUIDandISGID ./FileType 
