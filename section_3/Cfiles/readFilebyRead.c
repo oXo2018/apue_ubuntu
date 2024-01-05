@@ -13,9 +13,9 @@ int main ()
     char readbuf[BUFFSIZE];
     const char* writebuf = "Hello World! from firmon";
 
-    // open the file with read and write mode and set O_SYNC to ask kernel write immediately
+    // open the file with read and write mode and set O_SYNC to ask kernel write immediately.
     // AT_FDCWD  == -1 , AT_FDCWD is special file descriptor for the current working directory. 
-    // The vscode think AT_FDCWD cannot find definition just due to openat function above have `#ifdef __USE_ATFILE` in fcntl.h. Just ignore it. 
+    // The vscode think AT_FDCWD cannot find definition just due to openat function above have `#ifdef __USE_ATFILE` in fcntl.h. Just ignore it!!!
     /*
         firmon@ubt:~/Dev/apue/apue_ubuntu/section_3/Cfiles$ cc readFilebyRead.c  -o ../out/readFilebyRead
         readFilebyRead.c:7: warning: "__USE_ATFILE" redefined
