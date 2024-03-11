@@ -275,3 +275,60 @@ int RsaDemo::decrypt()
     EVP_PKEY_free(evp_key);
     return -1;
 }
+
+int RsaDemo::sign()
+{
+    FILE* rsa_private_key_file = fopen(RSA_private_key_file.c_str(), "r");
+    EVP_PKEY* evp_key = PEM_read_PrivateKey(rsa_private_key_file, nullptr, nullptr, nullptr);
+    fclose(rsa_private_key_file);
+
+    if (evp_key)
+    {
+        RSA* rsa_private_key = EVP_PKEY_get1_RSA(evp_key);
+        std::string message = std::string(200,'a');
+        unsigned char signature[4096] = {0};
+        unsigned int signature_length;
+        if (RSA_sign(NID_sha256, reinterpret_cast<const unsigned char*>(message.c_str()), message.length(), signature, &signature_length, rsa_private_key))
+        {
+            // save signature to file
+            std::ofstream output_file("./rsa/rsa_signed.bin", std::ios::out | std::ios::binary);
+            output_file.write(reinterpret_cast<const char*>(signature), signature_length);
+            output_file.close();
+            std::cout << "Data signed successfully." << std::endl;
+
+            return 0;
+        }else{
+            std::cerr << "Sign failed!" << std::endl;
+            return -1;
+        }
+        
+    }
+    
+    return -1;
+}
+
+int RsaDemo::verify()
+{
+    
+    FILE* rsa_public_key_file = fopen(RSA_public_key_file.c_str(), "r");
+    EVP_PKEY* evp_key = PEM_read_PUBKEY(rsa_public_key_file, nullptr, nullptr, nullptr);
+    fclose(rsa_public_key_file);
+    if (evp_key)
+    {
+        RSA* rsa_public_key = EVP_PKEY_get1_RSA(evp_key);
+        std::ifstream input_file("./rsa/rsa_signed.bin", std::ios::in | std::ios::binary);
+        std::string input_string((std::istreambuf_iterator<char>(input_file)), std::istreambuf_iterator<char>());
+        std::string message = std::string(200,'a');
+        if (RSA_verify(NID_sha256, reinterpret_cast<const unsigned char*>(message.c_str()), message.length(), reinterpret_cast<const unsigned char*>(input_string.c_str()), input_string.length(), rsa_public_key))
+        {
+            std::cout << "verified successfully." << std::endl;
+            return 0;
+        }else{
+            std::cerr << "verified failed." << std::endl;
+            return -1;
+        }
+    }
+ 
+    return -1;
+}
+
