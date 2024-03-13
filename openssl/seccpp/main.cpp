@@ -1,10 +1,12 @@
 #include <iostream>
-#include "rsa.h"
-#include "aes.h"
 #include <openssl/evp.h>
 #include <fstream>
 #include <openssl/rand.h>
 #include <openssl/hmac.h>
+
+#include "rsa.h"
+#include "aes.h"
+#include "ecdsa.h"
 
 int sha()
 {
@@ -83,7 +85,12 @@ int main()
 
     sha();
     hmac();
-    
+
+    EcdsaDemo ecdsademo;
+    ecdsademo.generatekey();
+    ecdsademo.sign();
+    ecdsademo.verify();
+
 }
 
 
