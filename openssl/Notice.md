@@ -35,3 +35,66 @@ PKCS#1 defines the following functionalities:
 4. RSA digital signature verification: Specifies how to verify the validity of a signature using an RSA public key.
 
 The PKCS#1 standard has undergone several version updates. The initial version was PKCS#1 v1.5, followed by PKCS#1 v2.0 and PKCS#1 v2.1. These versions differ in encryption, signing and other aspects, depending on the requirements of the application and security considerations.
+
+***
+
+### 1.1.1 Architecture(As-Is)
+1. APPLICATION
+    - command line utility.
+    - This components such as CA, ciphers, dgst, cms, genrsa, ecparam, genpkey, req etc.
+    - use the openssl libraries to perform above tasks.
+2. LIBSSL
+    - used for TLS and DTLS, dependent on LIBCRYPTO
+    - LIBSSL uses LIBCRYPTO to preform various SSL TLS related cryptographic tasks
+3. LIBCRYPTO
+    - Contains implementations for all supported cryptographic algorithms and operations.(Core library)
+    - It also contaions implementations for protocols such as CMS or OCSP
+4. ENGINE
+    - Privides enhancements to LIBCRYPTO
+    - Engine are used as an extension to LIBCRYPTO(They may contaion algorithms and features that are not natively supported by openssl)
+
+### 3.0 Architecture(To-Be)
+1. Applications
+    - CA, ciphers, dgst, cms, genrsa, ecparam, genpkey, req etc.
+    - no changes with 1.1.1
+2. Common Services(API)
+    - BIO, EVP, ASN.1, X.509, PEM
+    - interfaces which helps in building an application.
+    - BIO can be used to basic input ouput operations instead of writing your own logic.
+    - EVP provides high level functions for various cryptographic operations.
+3. Protocol
+    - TLS, DTLS, CMS, OCSP, TS, CMP
+    - Also support certificate management protocol.
+4. Legacy API
+    - Old deprecated functions not part of EVP.
+    - Just for provide backwards compatibility.
+5. Core
+    - Passes a cryptographic request to a Provider.
+6. Providers
+    - Provider is separate unit. Application load provider depend on which they need.
+    - Provides implementations for various cryptographic operations and algorithms.
+    - Will be replacing the Engine interface(1.1.1).
+    - Can also be used by a third-party to provide their own implementation.
+    - OpenSSL 3.0 has five of its own providers.
+  
+#### Providers
+1. Default
+    - Default provider of OpenSSL loaded as default.(Default provider gets loaded when no other provider is specified by an application)
+    - Exists inside libcrypto library.
+    - Has access to all algotithms provided by OpenSSL.
+2. Legacy
+    - Has a collection of old algotithms which are considered no longer use or insecure.
+    - Provides backwards compatibility.
+    - Examples are MD4, Blowfish, DES.
+3. FIPS
+    - Has a collection of FIPS validated algorithms.
+    - Used for FIPS 140-2 compliance.
+    - FIPS provider used a separate module.
+4. Base
+    - Has implementation for all non-cryptographic algorithms.
+    - Contains algorithms to serialize and deserialize keys.
+    - Should be loaded if the Default provider is not loaded.
+5. Null
+    - Has no implementation for any kind of algorithms.
+    - Built into libcrypto library.
+    - Ensures default provider is not used in anyway.
