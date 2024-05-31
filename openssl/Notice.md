@@ -314,7 +314,7 @@ firmon@ubt:/opt/openssl$ sudo make uninstall_sw && sudo make uninstall_fips && s
 
 
 firmon@ubt:/opt/openssl/certs$ /opt/openssl/bin/openssl version -a
-/opt/openssl/bin/openssl: /lib/x86_64-linux-gnu/libcrypto.so.3: version `OPENSSL_3.0.9' not found (required by /opt/openssl/bin/openssl)
+/opt/openssl/bin/openssl: /lib/x86_64-linux-gnu/libcrypto.so.3: version 'OPENSSL_3.0.9' not found (required by /opt/openssl/bin/openssl)
 
 // fix the error 
 firmon@ubt:/opt/openssl/certs$ export LD_LIBRARY_PATH=/opt/openssl/lib64/
