@@ -98,3 +98,232 @@ The PKCS#1 standard has undergone several version updates. The initial version w
     - Has no implementation for any kind of algorithms.
     - Built into libcrypto library.
     - Ensures default provider is not used in anyway.
+
+---
+Installed openssl3 by apt have only one modules legacy.so
+
+```shell
+firmon@ubt:/usr/lib/x86_64-linux-gnu/ossl-modules$ ls
+legacy.so
+
+firmon@ubt:/usr/lib/x86_64-linux-gnu/ossl-modules$ openssl list -providers
+Providers:
+  default
+    name: OpenSSL Default Provider
+    version: 3.0.2
+    status: active
+
+// Download the openssl source code and execute below command to generate the makefile
+firmon@ubt:~/openssl-3.0.13$ ./config --prefix=/opt/openssl --openssldir=/opt/openssl enable-fips
+
+// then build the source code
+firmon@ubt:~/openssl-3.0.13$ make -j
+
+// install everything include all binaries, the header files, the help docs, the SSL directories and else.
+firmon@ubt:~/openssl-3.0.13$ sudo make install
+
+// install only necessary files.(just going to install the software components such as the binaries, the header files engines and the modules which directory will not include FIPS)
+firmon@ubt:~/openssl-3.0.13$ sudo make install_sw
+
+// install only openssl app.
+firmon@ubt:~/openssl-3.0.13$ sudo make install_runtime
+
+// install fips module
+firmon@ubt:~/openssl-3.0.13$ sudo make install_fips
+
+firmon@ubt:~/openssl-3.0.13$ sudo make install_sw && sudo make install_fips && sudo make install_ssldirs
+
+firmon@ubt:~/openssl-3.0.13$ tree /opt/openssl/
+/opt/openssl/
+├── bin
+│   ├── c_rehash
+│   └── openssl
+├── certs
+├── ct_log_list.cnf
+├── ct_log_list.cnf.dist
+├── fipsmodule.cnf
+├── include
+│   └── openssl
+│       ├── aes.h
+│       ├── asn1err.h
+│       ├── asn1.h
+│       ├── asn1_mac.h
+│       ├── asn1t.h
+│       ├── asyncerr.h
+│       ├── async.h
+│       ├── bioerr.h
+│       ├── bio.h
+│       ├── blowfish.h
+│       ├── bnerr.h
+│       ├── bn.h
+│       ├── buffererr.h
+│       ├── buffer.h
+│       ├── camellia.h
+│       ├── cast.h
+│       ├── cmac.h
+│       ├── cmperr.h
+│       ├── cmp.h
+│       ├── cmp_util.h
+│       ├── cmserr.h
+│       ├── cms.h
+│       ├── comperr.h
+│       ├── comp.h
+│       ├── conf_api.h
+│       ├── conferr.h
+│       ├── conf.h
+│       ├── configuration.h
+│       ├── conftypes.h
+│       ├── core_dispatch.h
+│       ├── core.h
+│       ├── core_names.h
+│       ├── core_object.h
+│       ├── crmferr.h
+│       ├── crmf.h
+│       ├── cryptoerr.h
+│       ├── cryptoerr_legacy.h
+│       ├── crypto.h
+│       ├── cterr.h
+│       ├── ct.h
+│       ├── decodererr.h
+│       ├── decoder.h
+│       ├── des.h
+│       ├── dherr.h
+│       ├── dh.h
+│       ├── dsaerr.h
+│       ├── dsa.h
+│       ├── dtls1.h
+│       ├── ebcdic.h
+│       ├── ecdh.h
+│       ├── ecdsa.h
+│       ├── ecerr.h
+│       ├── ec.h
+│       ├── encodererr.h
+│       ├── encoder.h
+│       ├── engineerr.h
+│       ├── engine.h
+│       ├── e_os2.h
+│       ├── err.h
+│       ├── esserr.h
+│       ├── ess.h
+│       ├── evperr.h
+│       ├── evp.h
+│       ├── fipskey.h
+│       ├── fips_names.h
+│       ├── hmac.h
+│       ├── httperr.h
+│       ├── http.h
+│       ├── idea.h
+│       ├── kdferr.h
+│       ├── kdf.h
+│       ├── lhash.h
+│       ├── macros.h
+│       ├── md2.h
+│       ├── md4.h
+│       ├── md5.h
+│       ├── mdc2.h
+│       ├── modes.h
+│       ├── objectserr.h
+│       ├── objects.h
+│       ├── obj_mac.h
+│       ├── ocsperr.h
+│       ├── ocsp.h
+│       ├── opensslconf.h
+│       ├── opensslv.h
+│       ├── ossl_typ.h
+│       ├── param_build.h
+│       ├── params.h
+│       ├── pem2.h
+│       ├── pemerr.h
+│       ├── pem.h
+│       ├── pkcs12err.h
+│       ├── pkcs12.h
+│       ├── pkcs7err.h
+│       ├── pkcs7.h
+│       ├── proverr.h
+│       ├── provider.h
+│       ├── prov_ssl.h
+│       ├── randerr.h
+│       ├── rand.h
+│       ├── rc2.h
+│       ├── rc4.h
+│       ├── rc5.h
+│       ├── ripemd.h
+│       ├── rsaerr.h
+│       ├── rsa.h
+│       ├── safestack.h
+│       ├── seed.h
+│       ├── self_test.h
+│       ├── sha.h
+│       ├── srp.h
+│       ├── srtp.h
+│       ├── ssl2.h
+│       ├── ssl3.h
+│       ├── sslerr.h
+│       ├── sslerr_legacy.h
+│       ├── ssl.h
+│       ├── stack.h
+│       ├── storeerr.h
+│       ├── store.h
+│       ├── symhacks.h
+│       ├── tls1.h
+│       ├── trace.h
+│       ├── tserr.h
+│       ├── ts.h
+│       ├── txt_db.h
+│       ├── types.h
+│       ├── uierr.h
+│       ├── ui.h
+│       ├── whrlpool.h
+│       ├── x509err.h
+│       ├── x509.h
+│       ├── x509v3err.h
+│       ├── x509v3.h
+│       └── x509_vfy.h
+├── lib64
+│   ├── engines-3
+│   │   ├── afalg.so
+│   │   ├── capi.so
+│   │   ├── loader_attic.so
+│   │   └── padlock.so
+│   ├── libcrypto.a
+│   ├── libcrypto.so -> libcrypto.so.3
+│   ├── libcrypto.so.3
+│   ├── libssl.a
+│   ├── libssl.so -> libssl.so.3
+│   ├── libssl.so.3
+│   ├── ossl-modules
+│   │   ├── fips.so
+│   │   └── legacy.so
+│   └── pkgconfig
+│       ├── libcrypto.pc
+│       ├── libssl.pc
+│       └── openssl.pc
+├── misc
+│   ├── CA.pl
+│   ├── tsget -> tsget.pl
+│   └── tsget.pl
+├── openssl.cnf
+├── openssl.cnf.dist
+└── private
+
+10 directories, 160 files
+
+
+// uninstall the installed file
+firmon@ubt:/opt/openssl$ sudo make uninstall_sw && sudo make uninstall_fips && sudo make uninstall_ssldirs
+
+
+firmon@ubt:/opt/openssl/certs$ /opt/openssl/bin/openssl version -a
+/opt/openssl/bin/openssl: /lib/x86_64-linux-gnu/libcrypto.so.3: version `OPENSSL_3.0.9' not found (required by /opt/openssl/bin/openssl)
+
+// fix the error 
+firmon@ubt:/opt/openssl/certs$ export LD_LIBRARY_PATH=/opt/openssl/lib64/
+
+firmon@ubt:/opt/openssl/certs$ vim ~/.profile
+// add blow commands.
+export PATH=/opt/openssl/bin:$PATH
+export LD_LIBRARY_PATH=/opt/openssl/lib64
+firmon@ubt:/opt/openssl/certs$ source ~/.profile
+
+```
+
